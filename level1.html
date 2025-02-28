@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        .score {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Science Quiz</h2>
+        <p class="question">Loading...</p>
+        <div class="options"></div>
+        <p class="score">Score: <span id="score">0</span></p>
+    </div>
+
+    <script>
+        if (localStorage.getItem("quizCompleted")) {
+            document.body.innerHTML = "<h1>Quiz Ended! Refreshing is not allowed.</h1>";
+        } else {
+            const quizData = [
+            {
+                question: "Which programming language is most commonly used for developing artificial intelligence and machine learning models?",
+                options: ["Java", "Python", "C++", "Swift"],
+                answer: "Python"
+            },
+            {
+                question: "Which technology involves creating three-dimensional objects by layering materials based on digital models?",
+                options: ["3D Printing", "CNC Machining", "Laser Cutting", "Injection Molding"],
+                answer: "3D Printing"
+            },
+            {
+                question: "What is the primary purpose of blockchain technology?",
+                options: ["To create centralized databases", "To enable secure, decentralized record-keeping", "To enhance graphic rendering in video games", "To improve battery life in mobile devices"],
+                answer: "To enable secure, decentralized record-keeping"
+            },
+            {
+                question: "Which emerging technology aims to create immersive experiences by overlaying digital information onto the real world?",
+                options: ["Virtual Reality", "Augmented Reality", "Artificial Intelligence", "Quantum Computing"],
+                answer: "Augmented Reality"
+            },
+            {
+                question: "Which company developed the ChatGPT AI model?",
+                options: ["Google", "Microsoft", "OpenAI", "Amazon"],
+                answer: "OpenAI"
+            },
+            {
+                question: "Which field of study focuses on the design and use of robots?",
+                options: ["Cybernetics", "Robotics", "Mechatronics", "Automation"],
+                answer: "Robotics"
+            },
+            {
+                question: "What is the main advantage of 5G networks over previous generations?",
+                options: ["Increased battery life", "Higher data transfer speeds and lower latency", "Enhanced device durability", "Improved user interfaces"],
+                answer: "Higher data transfer speeds and lower latency"
+            },
+            {
+                question: "What is the purpose of a neural network in AI?",
+                options: ["To store and retrieve data like a database", "To simulate human brain function for pattern recognition and learning", "To encrypt sensitive data", "To create realistic 3D graphics"],
+                answer: "To simulate human brain function for pattern recognition and learning"
+            },
+            {
+                question: "What does the term 'Internet of Things' (IoT) refer to?",
+                options: ["A new internet browser", "A network of interconnected physical devices that can collect and exchange data", "A social media platform", "A type of cloud storage"],
+                answer: "A network of interconnected physical devices that can collect and exchange data"
+            },
+            {
+                question: "What is the main advantage of using biodegradable electronics?",
+                options: ["They last longer than traditional electronics", "They reduce electronic waste and environmental impact", "They have faster processing speeds", "They are cheaper to manufacture"],
+                answer: "They reduce electronic waste and environmental impact"
+            }
+        ];
+
+            let currentQuestionIndex = localStorage.getItem("quizIndex") ? parseInt(localStorage.getItem("quizIndex")) : 0;
+            let score = localStorage.getItem("quizScore") ? parseInt(localStorage.getItem("quizScore")) : 0;
+            const questionEl = document.querySelector(".question");
+            const optionsEl = document.querySelector(".options");
+            const scoreEl = document.getElementById("score");
+
+            function loadQuestion() {
+                if (currentQuestionIndex >= quizData.length) {
+                    questionEl.innerText = "Quiz Completed!";
+                    optionsEl.innerHTML = "";
+                    localStorage.setItem("quizCompleted", true);
+                    return;
+                }
+                const currentQuestion = quizData[currentQuestionIndex];
+                questionEl.innerText = currentQuestion.question;
+                optionsEl.innerHTML = "";
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement("button");
+                    button.innerText = option;
+                    button.onclick = () => checkAnswer(option);
+                    optionsEl.appendChild(button);
+                });
+            }
+
+            function checkAnswer(answer) {
+                if (answer === quizData[currentQuestionIndex].answer) {
+                    score++;
+                }
+                currentQuestionIndex++;
+                localStorage.setItem("quizIndex", currentQuestionIndex);
+                localStorage.setItem("quizScore", score);
+                loadQuestion();
+            }
+
+            loadQuestion();
+            scoreEl.innerText = score;
+        }
+    </script>
+</body>
+</html>

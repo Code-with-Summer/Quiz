@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            display: none;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        .score {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .image-container {
+            margin: auto;
+            width: 60%;
+            padding: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .timer {
+            font-size: 22px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1> Analyze the images to answer the questions !!</h1>
+    <div class="image-container">
+        <img src="quizLevel3.webp" alt="Quiz Image 1" width = '800px' height="700px">
+        <img src="science_poster.jpg" alt="Quiz Image 2" width = '800px' height="700px">
+    </div>
+    <p class="timer">Quiz starts in: <span id="countdown">120</span> seconds</p>
+    <div class="quiz-container">
+        <h2>Science Quiz</h2>
+        <p class="question">Loading...</p>
+        <div class="options"></div>
+        <p class="score">Score: <span id="score">0</span></p>
+    </div>
+    <script>
+        const timerEl = document.getElementById("countdown");
+        const quizContainer = document.querySelector(".quiz-container");
+        const imageContainer = document.querySelector(".image-container");
+        
+        let countdown = localStorage.getItem("quizCountdown") ? parseInt(localStorage.getItem("quizCountdown")) : 120;
+        let quizStarted = localStorage.getItem("quizStarted");
+
+        if (quizStarted === "ended") {
+            document.body.innerHTML = "<h1>Quiz has already ended.</h1>";
+        } else {
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                timerEl.innerText = countdown;
+                localStorage.setItem("quizCountdown", countdown);
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.style.display = "none";
+                    imageContainer.style.display = "none";
+                    quizContainer.style.display = "block";
+                    localStorage.setItem("quizStarted", "true");
+                    loadQuestion();
+                }
+            }, 1000);
+        }
+
+        const quizData = [
+            {
+                question: "What contrast does the image depict between the left and right sides?",
+                options: [
+                    "It shows different weather conditions", 
+                    "It represents the balance between urbanization and rural life", 
+                    "It contrasts industrial pollution with environmental sustainability", 
+                    "It highlights the development of futuristic technology"
+                ],
+                answer: "It contrasts industrial pollution with environmental sustainability"
+            },
+            {
+                question: "Why do you think the students are positioned on the green side, observing the industrialized side?",
+                options: [
+                    "To symbolize their role in choosing a sustainable future", 
+                    "To show their interest in technological development", 
+                    "To indicate that they prefer urbanization over nature", 
+                    "To emphasize the importance of traveling between both worlds"
+                ],
+                answer: "To symbolize their role in choosing a sustainable future"
+            },
+            {
+                question: "How could technology be leveraged to reduce the harmful effects of industrialization?",
+                options: [
+                    "By relying entirely on non-renewable energy sources", 
+                    "By adopting green technologies like renewable energy and waste management", 
+                    "By increasing industrial output without considering environmental damage", 
+                    "By completely avoiding technological advancements"
+                ],
+                answer: "By adopting green technologies like renewable energy and waste management"
+            },
+            {
+                question: "Do you think economic development and environmental conservation can coexist?",
+                options: [
+                    "Yes, through sustainable development strategies", 
+                    "No, because development always leads to environmental damage", 
+                    "Yes, but only if industries completely stop operations", 
+                    "No, because conservation should always come before progress"
+                ],
+                answer: "Yes, through sustainable development strategies"
+            },
+            {
+                question: "If you were to redesign this image for a more hopeful future, what would you add?",
+                options: [
+                    "More industries to show economic progress", 
+                    "More renewable energy sources and eco-friendly cities", 
+                    "Completely remove industrial elements", 
+                    "Depict a world with no human influence"
+                ],
+                answer: "More renewable energy sources and eco-friendly cities"
+            },
+            {
+                question: "How does the image represent the relationship between technology, education, and sustainability?",
+                options: [
+                    "It shows how technology replaces the need for education",
+                    "It highlights the balance between scientific progress, environmental conservation, and learning",
+                    "It suggests that urbanization is more important than nature",
+                    "It promotes the idea that education is unnecessary for innovation"
+                ],
+                answer: "It highlights the balance between scientific progress, environmental conservation, and learning"
+            },
+            {
+                question: "What might be the significance of the glowing light bulb with the atomic symbol in the center of the image?",
+                options: [
+                    "It represents the importance of nuclear energy only",
+                    "It symbolizes innovation and the role of science in progress",
+                    "It indicates that traditional learning methods are outdated",
+                    "It shows that technology is independent of human creativity"
+                ],
+                answer: "It symbolizes innovation and the role of science in progress"
+            },
+            {
+                question: "What message does the inclusion of children in the image convey about the future of technology and sustainability?",
+                options: [
+                    "The next generation will only focus on digital advancements",
+                    "Students should only prioritize science over other subjects",
+                    "Young minds play a crucial role in shaping a sustainable future with technology",
+                    "Education is less important compared to technological growth"
+                ],
+                answer: "Young minds play a crucial role in shaping a sustainable future with technology"
+            },
+            {
+                question: "If you were to modify the image to highlight challenges in scientific progress, what elements would you add?",
+                options: [
+                    "More natural elements to show the lack of technology",
+                    "Symbols representing pollution, overconsumption, and resource depletion",
+                    "Digital devices replacing all educational books",
+                    "A cityscape with no greenery to focus solely on urbanization"
+                ],
+                answer: "Symbols representing pollution, overconsumption, and resource depletion"
+            },
+            {
+                question: "What improvements could make this image more effective in promoting STEM education?",
+                options: [
+                    "Adding more futuristic elements like robots and AI-driven classrooms",
+                    "Depicting students working on scientific experiments alongside the technological themes",
+                    "Removing all natural elements to emphasize technology",
+                    "Showing a larger cityscape without human involvement"
+                ],
+                answer: "Depicting students working on scientific experiments alongside the technological themes"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const questionEl = document.querySelector(".question");
+        const optionsEl = document.querySelector(".options");
+        const scoreEl = document.getElementById("score");
+
+        function loadQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            optionsEl.innerHTML = "";
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option);
+                optionsEl.appendChild(button);
+            });
+        }
+
+        function checkAnswer(answer) {
+            if (answer === quizData[currentQuestionIndex].answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                questionEl.innerText = "Quiz Completed!";
+                optionsEl.innerHTML = "";
+                localStorage.setItem("quizStarted", "ended");
+            }
+            scoreEl.innerText = score;
+        }
+    </script>
+</body>
+</html>

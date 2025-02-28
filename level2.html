@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            display: none;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        .score {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .image-container {
+            margin: auto;
+            width: 60%;
+            padding: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .timer {
+            font-size: 22px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <img src="quizLevel2.webp" alt="Quiz Image">
+    </div>
+    <p class="timer">Quiz starts in: <span id="countdown">60</span> seconds</p>
+    <div class="quiz-container">
+        <h2>Science Quiz</h2>
+        <p class="question">Loading...</p>
+        <div class="options"></div>
+        <p class="score">Score: <span id="score">0</span></p>
+    </div>
+
+    <script>
+        let countdown = localStorage.getItem("countdown") ? parseInt(localStorage.getItem("countdown")) : 80;
+        let quizCompleted = localStorage.getItem("quizCompleted");
+        const timerEl = document.getElementById("countdown");
+        const quizContainer = document.querySelector(".quiz-container");
+        const imageContainer = document.querySelector(".image-container");
+
+        if (quizCompleted) {
+            document.body.innerHTML = "<h2>Quiz Already Completed</h2>";
+        } else {
+            function updateCountdown() {
+                localStorage.setItem("countdown", countdown);
+                timerEl.innerText = countdown;
+            }
+
+            const countdownInterval = setInterval(() => {
+                if (countdown > 0) {
+                    countdown--;
+                    updateCountdown();
+                } else {
+                    clearInterval(countdownInterval);
+                    timerEl.style.display = "none";
+                    imageContainer.style.display = "none";
+                    quizContainer.style.display = "block";
+                    loadQuestion();
+                }
+            }, 1000);
+        }
+
+        const quizData = [
+            {
+                question: "What is the main purpose of wind turbines in the image?",
+                options: ["Generating electricity using wind energy", "Cooling down the atmosphere", "Storing excess electricity", "Acting as communication towers"],
+                answer: "Generating electricity using wind energy"
+            },
+            {
+                question: "What role do solar panels play in sustainable energy production?",
+                options: ["They store wind energy for future use", "They convert sunlight into electricity", "They provide shade for crops", "They reflect sunlight to increase global temperatures"],
+                answer: "They convert sunlight into electricity"
+            },
+            {
+                question: "How are bicycles and electric scooters contributing to sustainability in the image?",
+                options: ["They reduce traffic congestion", "They decrease dependence on fossil fuels and reduce pollution", "They are faster than cars", "They generate electricity for nearby buildings"],
+                answer: "They decrease dependence on fossil fuels and reduce pollution"
+            },
+            {
+                question: "Why are scientists and researchers important for environmental conservation?",
+                options: ["They create solutions to reduce pollution and develop renewable energy sources", "They study the effects of technology on social media trends", "They work only in laboratories and don’t interact with the environment", "They focus only on space research"],
+                answer: "They create solutions to reduce pollution and develop renewable energy sources"
+            },
+            {
+                question: "In the image, what does the large globe in the center symbolize?",
+                options: ["The connection between humans and the environment", "The impact of climate change on the Earth", "A future where technology and sustainability go hand in hand", "All of the above"],
+                answer: "All of the above"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const questionEl = document.querySelector(".question");
+        const optionsEl = document.querySelector(".options");
+        const scoreEl = document.getElementById("score");
+
+        function loadQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            optionsEl.innerHTML = "";
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option);
+                optionsEl.appendChild(button);
+            });
+        }
+
+        function checkAnswer(answer) {
+            if (answer === quizData[currentQuestionIndex].answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                questionEl.innerText = "Quiz Completed!";
+                optionsEl.innerHTML = "";
+                localStorage.setItem("quizCompleted", true);
+            }
+            scoreEl.innerText = score;
+        }
+    </script>
+</body>
+</html>
