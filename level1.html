@@ -134,14 +134,18 @@
             }
 
             function checkAnswer(answer) {
-                if (answer === quizData[currentQuestionIndex].answer) {
-                    score++;
-                }
-                currentQuestionIndex++;
-                localStorage.setItem("quizIndex", currentQuestionIndex);
-                localStorage.setItem("quizScore", score);
-                loadQuestion();
-            }
+    if (answer === quizData[currentQuestionIndex].answer) {
+        score++;
+        localStorage.setItem("quizScore", score); // ✅ Save updated score in localStorage
+    }
+    currentQuestionIndex++;
+    localStorage.setItem("quizIndex", currentQuestionIndex);
+    
+    scoreEl.innerText = score; // ✅ Update the score display immediately
+    
+    loadQuestion();
+}
+
 
             loadQuestion();
             scoreEl.innerText = score;
